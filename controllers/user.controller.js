@@ -66,8 +66,12 @@ const getList = catchAsync(async (req, res) => {
     _id: { $ne: currentUser },
     role: selectesRole,
   };
+  // if (searchName) {
+  //   query.first_name = { $regex: new RegExp(searchName, "i") };
+  // }
   if (searchName) {
-    query.first_name = { $regex: new RegExp(searchName, "i") };
+    const searchValue = new RegExp(searchName, "i");
+    query.$or = [{ first_name: searchValue }, { email: searchValue }];
   }
   try {
     const totalCount = await User.countDocuments(query);

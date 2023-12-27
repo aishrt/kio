@@ -196,34 +196,6 @@ function UserList() {
     }
   }, [clickDelete]);
 
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (event: any) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file!);
-
-      const response = await fetch("http://localhost:4004/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Image uploaded successfully:", data);
-      } else {
-        const errorData = await response.json();
-        console.error("Error uploading image:", errorData);
-      }
-    } catch (error) {
-      console.error("An error occurred while uploading image:", error);
-    }
-  };
-
   return (
     <>
       {isLoading ? (
@@ -231,9 +203,6 @@ function UserList() {
       ) : (
         <>
           <div className="container mt-3">
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleUpload}>Upload Image</button>
-
             <h3>All User listing.</h3>
             <div className="row TPOsbc">
               <div className="col-md-7"></div>
