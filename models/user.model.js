@@ -6,6 +6,9 @@ const { roleNames } = require("../config/roles");
 
 const userSchema = mongoose.Schema(
   {
+    iamge: {
+      type: String,
+    },
     first_name: {
       type: String,
       required: true,
