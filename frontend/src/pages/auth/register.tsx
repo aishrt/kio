@@ -11,6 +11,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FileInput from "../../components/FileInput";
 
 interface FormData {
   first_name: string;
@@ -19,6 +20,7 @@ interface FormData {
   phone_number: string;
   password: string;
   address?: string;
+  image?: string;
   role?: string;
 }
 
@@ -35,12 +37,47 @@ export const Register = () => {
     formState: { errors },
   } = useForm<FormData>();
 
+  const [file, setFile] = useState<any>();
+  const [fileupload, setFileupload] = useState<any>();
+
+  const handleFileChange = (file: File | null, fileDataURL: string) => {
+    setFile(file);
+  };
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file!);
+
+      const response = await axios.post(
+        "http://localhost:4004/upload",
+        formData
+      );
+
+      if (response.status === 200) {
+        const data = response.data.file;
+        setFileupload(data);
+        return data;
+      } else {
+        console.error("Error uploading image:", response.data);
+      }
+    } catch (error) {
+      console.error("An error occurred while uploading image:", error);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const roleValue = checked ? "admin" : "user";
+      let uploadedFile = null;
+
+      if (file) {
+        const imgResp = await handleUpload();
+        uploadedFile = imgResp;
+      }
+
       const response = await axios.post(
         "http://localhost:4004/auth/register",
-        { ...data, role: roleValue },
+        { ...data, role: roleValue, image: uploadedFile },
         {
           headers: {
             Accept: "application/json, text/plain, */*",
@@ -51,9 +88,8 @@ export const Register = () => {
       const roleType = response.data.data.role === "user" ? "User" : "Admin";
       toast.success(`${roleType} Registered successful!`);
       navigate("/login");
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error(`${error}`);
+    } catch (error: any) {
+      toast.error(`${error?.response?.data?.message}`);
     }
   };
 
@@ -73,6 +109,8 @@ export const Register = () => {
                 noValidate
                 autoComplete="off"
               >
+                <FileInput onFileChange={handleFileChange} />
+
                 <div>
                   <TextField
                     id="first_name"
@@ -92,14 +130,14 @@ export const Register = () => {
                     label="Last Name"
                     variant="filled"
                     {...register("last_name", {
-                      required: "Last Name is required",
+                      required: "Last name is required",
                       maxLength: {
                         value: 20,
-                        message: "Last Name must be less than 20 characters",
+                        message: "Last name cannot exceed 20 characters",
                       },
                       minLength: {
                         value: 1,
-                        message: "Last Name is required",
+                        message: "Last name is required",
                       },
                     })}
                   />
@@ -117,13 +155,9 @@ export const Register = () => {
                     variant="filled"
                     {...register("email", {
                       required: "Email is required",
-                      minLength: {
-                        value: 1,
-                        message: "Email is required",
-                      },
                       maxLength: {
                         value: 60,
-                        message: "Email must be less than 60 characters",
+                        message: "Email cannot exceed 60 characters",
                       },
                       pattern: {
                         value: /^\S+@\S+$/i,
@@ -140,17 +174,17 @@ export const Register = () => {
                   <TextField
                     id="phone_number"
                     label="Phone Number"
-                    type="tel"
+                    type="number"
                     variant="filled"
                     {...register("phone_number", {
-                      required: "Phone Number is required",
+                      required: "Phone number is required",
                       minLength: {
-                        value: 1,
-                        message: "Phone Number is required",
+                        value: 10,
+                        message: "Valid phone number is required",
                       },
                       maxLength: {
-                        value: 12,
-                        message: "Phone Number must be less than 12 characters",
+                        value: 10,
+                        message: "Phone number cannot exceed 10 digits",
                       },
                     })}
                   />
@@ -169,7 +203,7 @@ export const Register = () => {
                       required: "Password is required",
                       maxLength: {
                         value: 99,
-                        message: "Password must be less than 99 characters",
+                        message: "Password cannot exceed 99 characters",
                       },
                     })}
                   />
@@ -183,8 +217,18 @@ export const Register = () => {
                     id="address"
                     label="Address"
                     variant="filled"
-                    {...register("address")}
+                    {...register("address", {
+                      required: "Address is required",
+                      maxLength: {
+                        value: 99,
+                        message: "Address cannot exceed 99 characters",
+                      },
+                    })}
                   />
+
+                  {errors.address && (
+                    <p className="errorText">{errors.address.message}</p>
+                  )}
                 </div>
 
                 <FormControlLabel

@@ -12,6 +12,12 @@ const register = catchAsync(async (req, res) => {
         message: `Email already registered !`,
       });
     }
+    if (req.body.password.length < 8) {
+      return res.status(401).json({
+        status: "401",
+        message: `Invalid Password !`,
+      });
+    }
     const user = await User.create(req.body);
     return res.status(200).json({
       status: "200",

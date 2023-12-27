@@ -1,3 +1,5 @@
+const catchAsync = require("../utils/catchAsync");
+
 const landing = (req, res) => {
   const responseContent = `
     <html>
@@ -41,6 +43,32 @@ const landing = (req, res) => {
   res.send(responseContent);
 };
 
+const upload = catchAsync(async (req, res) => {
+  try {
+    if (req.file) {
+      const data = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
+      return res.status(200).json({
+        status: 200,
+        message: "Image upload successfully",
+        file: data,
+      });
+    }
+    return res.status(400).json({
+      status: 400,
+      message: "File does' not exist",
+      file: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred while adding employee data",
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
 module.exports = {
   landing,
+  upload,
 };

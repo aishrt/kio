@@ -4,6 +4,7 @@ const routes = require("./routes");
 const passport = require("passport");
 const httpStatus = require("http-status");
 const { jwtStrategy } = require("./config/passport");
+const path = require('path');
 
 let cors = require("cors");
 
@@ -18,6 +19,10 @@ app.use(cors());
 // jwt authentication
 app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
+
+// image upload
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.static(path.join(__dirname, "assets")));
 
 const port = process.env.REACT_APP_PORT;
 app.listen(port, (req, res) => {
