@@ -70,6 +70,24 @@ curl --location 'http://localhost:4004/auth/register' \
 }'
 
 
+if Image 
+curl --location 'http://localhost:4004/auth/register' \
+--header 'Accept: application/json, text/plain, */*' \
+--header 'Accept-Language: en-GB,en-US;q=0.9,en;q=0.8' \
+--header 'Connection: keep-alive' \
+--header 'Content-Type: application/json' \
+--header 'DNT: 1' \
+--header 'Origin: http://localhost:3000' \
+--header 'Referer: http://localhost:3000/' \
+--header 'Sec-Fetch-Dest: empty' \
+--header 'Sec-Fetch-Mode: cors' \
+--header 'Sec-Fetch-Site: same-site' \
+--header 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+--header 'sec-ch-ua: "Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"' \
+--header 'sec-ch-ua-mobile: ?0' \
+--header 'sec-ch-ua-platform: "Windows"' \
+--data-raw '{"first_name":"Falguni","last_name":"Thakur","email":"falguni@gmail.com","phone_number":"7689876455","password":"123@falguni","address":"Plot no F5-F6 , 3rd floor , phase -8 , Industrial Area , aahibzada ajit singh nagar ,punjab ,160055","role":"admin","image":"http://localhost:4004/1703786645850.jpg"}'
+
 -------------------------------------------------------
 
 Login

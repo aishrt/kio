@@ -54,7 +54,6 @@ export const Register = () => {
         const imgResp = await fileUpload(file);
         uploadedFile = imgResp;
       }
-
       const response = await axios.post(
         `${API_URL}/auth/register`,
         { ...data, role: roleValue, image: uploadedFile },
@@ -64,9 +63,8 @@ export const Register = () => {
           },
         }
       );
-
       const roleType = response.data.data.role === "user" ? "User" : "Admin";
-      toast.success(`${roleType} Registered successful!`);
+      toast.success(`${roleType} registered successful!`);
       navigate("/login");
     } catch (error: any) {
       toast.error(`${error?.response?.data?.message}`);
