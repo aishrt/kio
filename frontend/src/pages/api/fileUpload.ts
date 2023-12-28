@@ -5,15 +5,13 @@ export type fileDTO = {
 };
 
 export const fileUpload = async (
-  payload: fileDTO
+  file: File
 ): Promise<fileDTO | undefined> => {
   try {
-    console.log(payload, "payload");
-    const item = payload;
-    console.log(item, "item payload");
+    console.log(file, "payload");
 
     const formData = new FormData();
-    formData.append("file", payload.file);
+    formData.append("file", file);
 
     const response = await axios.post("http://localhost:4004/upload", formData);
 
@@ -24,6 +22,8 @@ export const fileUpload = async (
       console.error("Error uploading image:", response.data);
     }
   } catch (error) {
+    console.log(error);
+
     console.error("An error occurred while uploading image:", error);
   }
 };

@@ -33,6 +33,7 @@ function EditUser() {
     } catch (error: any) {
       if (error.response) {
         const errorMessage = error.response.data.message;
+        console.log(errorMessage);
       } else {
         console.log("An error occurred");
       }

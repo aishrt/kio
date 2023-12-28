@@ -9,9 +9,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileInput from "../../components/FileInput";
+import { fileUpload } from "../api/fileUpload";
 
 interface FormData {
   first_name: string;
@@ -37,15 +38,36 @@ export const Register = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const [file, setFile] = useState<any>();
+  const [file1, setFile1] = useState<any>();
+  const [file2, setFile2] = useState<any>();
 
-  const handleFileChange = (file: File | null, fileDataURL: string) => {
-    setFile(file);
+  console.log({ file1, file2 });
+
+  const help = async () => {
+    if (file1) {
+      const data = await fileUpload(file1);
+      console.log(data, "imnage data");
+    }
   };
+
+  useEffect(() => {
+    if (file1) {
+      help();
+    }
+  }, [file1]);
+
+  const handleFileChange1 = (file: File | null, fileDataURL: string) => {
+    setFile1(file);
+  };
+
+  const handleFileChange2 = (file: File | null, fileDataURL: string) => {
+    setFile2(file);
+  };
+
   const handleUpload = async () => {
     try {
       const formData = new FormData();
-      formData.append("file", file!);
+      formData.append("file", file1!);
 
       const response = await axios.post(
         "http://localhost:4004/upload",
@@ -68,7 +90,7 @@ export const Register = () => {
       const roleValue = checked ? "admin" : "user";
       let uploadedFile = null;
 
-      if (file) {
+      if (file1) {
         const imgResp = await handleUpload();
         uploadedFile = imgResp;
       }
@@ -107,7 +129,8 @@ export const Register = () => {
                 noValidate
                 autoComplete="off"
               >
-                <FileInput onFileChange={handleFileChange} />
+                <FileInput onFileChange={handleFileChange1} />
+                {/* <FileInput onFileChange={handleFileChange2} /> */}
 
                 <div>
                   <TextField
