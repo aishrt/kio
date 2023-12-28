@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const { User } = require("../models");
 
+// --------------- Get User Profile Detail ------------------
 const getProfile = catchAsync(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -19,6 +20,7 @@ const getProfile = catchAsync(async (req, res) => {
   }
 });
 
+// -------------------- Update User Profile ------------------
 const updateProfile = catchAsync(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -39,6 +41,8 @@ const updateProfile = catchAsync(async (req, res) => {
     });
   }
 });
+
+// ------------------------ Delete User Profile ------------------
 const deleteProfile = catchAsync(async (req, res) => {
   try {
     const userId = req.params.id;
@@ -56,28 +60,32 @@ const deleteProfile = catchAsync(async (req, res) => {
   }
 });
 
+// --------------------- Get List of all user's ------------------
 const getList = catchAsync(async (req, res) => {
   const currentUser = req.user;
-  const selectesRole = req.query.role;
+  const selectedRole = req.query.role;
   const searchName = req.query.name;
-  const perPage = 10;
-  const page = req.query.page ? parseInt(req.query.page, 10) : 1;
+
+  const perPage = 10; //  Number of documents to display on each page
+  const page = req.query.page ? parseInt(req.query.page, 10) : 1; // It specify the selected page number
+
   const query = {
-    _id: { $ne: currentUser },
-    role: selectesRole,
+    _id: { $ne: currentUser }, // List will not show the loggedin User
+    role: selectedRole,
   };
-  // if (searchName) {
-  //   query.first_name = { $regex: new RegExp(searchName, "i") };
-  // }
+
   if (searchName) {
     const searchValue = new RegExp(searchName, "i");
     query.$or = [{ first_name: searchValue }, { email: searchValue }];
-  }
+  } // You can search user through name or email
+
   try {
     const totalCount = await User.countDocuments(query);
+  
     const userList = await User.find(query)
       .skip(perPage * (page - 1))
       .limit(perPage);
+
     return res.status(200).json({
       status: "200",
       message: "User list fetched successfully!",

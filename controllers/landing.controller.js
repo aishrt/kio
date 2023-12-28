@@ -1,5 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
 
+// ---------- You can check if server is running through this api ----------
 const landing = (req, res) => {
   const responseContent = `
     <html>
@@ -12,15 +13,15 @@ const landing = (req, res) => {
             color: #333;
             margin: 0;
             padding: 0;
-            text-align: center; /* Center-align text in the body */
+            text-align: center;
           }
           h1 {
             margin-top :100px;
-            color: #008080; /* Teal color for the heading */
+            color: #008080; 
             font-size: 53px;
           }
           strong {
-            color: #006400; /* Dark green for strong text */
+            color: #006400; 
           }
           p {
             font-size: 33px;
@@ -36,26 +37,27 @@ const landing = (req, res) => {
         <h1>Hello! Welcome to our Server</h1>
         <p><strong>It is working properly</strong></p>
         <p>These server side API is working using NodeJs.</p>
-        <p><span>ART</span></p>
+        <p><span>A.R. Tyagi</span></p>
       </body>
     </html>
   `;
   res.send(responseContent);
 };
 
+// ------------------ Used to upload data through multer ---------------------
 const upload = catchAsync(async (req, res) => {
   try {
     if (req.file) {
-      const data = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
+      const data = `${process.env.BACKEND_URL}/${req.file.filename}`;
       return res.status(200).json({
         status: 200,
-        message: "Image upload successfully",
+        message: "Image uploaded successfully",
         file: data,
       });
     }
     return res.status(400).json({
       status: 400,
-      message: "File does' not exist",
+      message: "File does not exist !",
       file: {},
     });
   } catch (error) {
