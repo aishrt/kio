@@ -6,12 +6,14 @@ import { Button } from "@mui/material";
 import registermg from "../../assets/register.jpg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileInput from "../../components/FileInput";
+import { fileUpload } from "../api/fileUpload";
+import { ContentLayout } from "../../layout/ContentLayout";
+import { API_URL } from "../../config";
 
 interface FormData {
   first_name: string;
@@ -42,26 +44,6 @@ export const Register = () => {
   const handleFileChange = (file: File | null, fileDataURL: string) => {
     setFile(file);
   };
-  const handleUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file!);
-
-      const response = await axios.post(
-        "http://localhost:4004/upload",
-        formData
-      );
-
-      if (response.status === 200) {
-        const data = response.data.file;
-        return data;
-      } else {
-        console.error("Error uploading image:", response.data);
-      }
-    } catch (error) {
-      console.error("An error occurred while uploading image:", error);
-    }
-  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
@@ -69,12 +51,12 @@ export const Register = () => {
       let uploadedFile = null;
 
       if (file) {
-        const imgResp = await handleUpload();
+        const imgResp = await fileUpload(file);
         uploadedFile = imgResp;
       }
 
       const response = await axios.post(
-        "http://localhost:4004/auth/register",
+        `${API_URL}/auth/register`,
         { ...data, role: roleValue, image: uploadedFile },
         {
           headers: {
@@ -92,9 +74,9 @@ export const Register = () => {
   };
 
   return (
-    <>
+    <ContentLayout title="Register">
       <div className="formDiv">
-        <div className="formBorder">
+        <div className="formBorder registerMargin">
           <div className="row">
             <div className="col-md-7 make-center">
               <div className="imgDiv">
@@ -250,6 +232,6 @@ export const Register = () => {
           </div>
         </div>
       </div>
-    </>
+    </ContentLayout>
   );
 };
