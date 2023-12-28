@@ -6,13 +6,14 @@ import { Button } from "@mui/material";
 import registermg from "../../assets/register.jpg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileInput from "../../components/FileInput";
 import { fileUpload } from "../api/fileUpload";
+import { ContentLayout } from "../../layout/ContentLayout";
+import { API_URL } from "../../config";
 
 interface FormData {
   first_name: string;
@@ -38,51 +39,10 @@ export const Register = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const [file1, setFile1] = useState<any>();
-  const [file2, setFile2] = useState<any>();
+  const [file, setFile] = useState<any>();
 
-  console.log({ file1, file2 });
-
-  const help = async () => {
-    if (file1) {
-      const data = await fileUpload(file1);
-      console.log(data, "imnage data");
-    }
-  };
-
-  useEffect(() => {
-    if (file1) {
-      help();
-    }
-  }, [file1]);
-
-  const handleFileChange1 = (file: File | null, fileDataURL: string) => {
-    setFile1(file);
-  };
-
-  const handleFileChange2 = (file: File | null, fileDataURL: string) => {
-    setFile2(file);
-  };
-
-  const handleUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file1!);
-
-      const response = await axios.post(
-        "http://localhost:4004/upload",
-        formData
-      );
-
-      if (response.status === 200) {
-        const data = response.data.file;
-        return data;
-      } else {
-        console.error("Error uploading image:", response.data);
-      }
-    } catch (error) {
-      console.error("An error occurred while uploading image:", error);
-    }
+  const handleFileChange = (file: File | null, fileDataURL: string) => {
+    setFile(file);
   };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -90,13 +50,13 @@ export const Register = () => {
       const roleValue = checked ? "admin" : "user";
       let uploadedFile = null;
 
-      if (file1) {
-        const imgResp = await handleUpload();
+      if (file) {
+        const imgResp = await fileUpload(file);
         uploadedFile = imgResp;
       }
 
       const response = await axios.post(
-        "http://localhost:4004/auth/register",
+        `${API_URL}/auth/register`,
         { ...data, role: roleValue, image: uploadedFile },
         {
           headers: {
@@ -114,9 +74,9 @@ export const Register = () => {
   };
 
   return (
-    <>
+    <ContentLayout title="Register">
       <div className="formDiv">
-        <div className="formBorder">
+        <div className="formBorder registerMargin">
           <div className="row">
             <div className="col-md-7 make-center">
               <div className="imgDiv">
@@ -129,8 +89,7 @@ export const Register = () => {
                 noValidate
                 autoComplete="off"
               >
-                <FileInput onFileChange={handleFileChange1} />
-                {/* <FileInput onFileChange={handleFileChange2} /> */}
+                <FileInput onFileChange={handleFileChange} />
 
                 <div>
                   <TextField
@@ -273,6 +232,6 @@ export const Register = () => {
           </div>
         </div>
       </div>
-    </>
+    </ContentLayout>
   );
 };
