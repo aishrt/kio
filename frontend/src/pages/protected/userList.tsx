@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import storage from "../../utils/storage";
@@ -240,80 +241,92 @@ function UserList() {
                 </FormControl>
               </div>
             </div>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Name</StyledTableCell>
-                    <StyledTableCell align="right">Email</StyledTableCell>
-                    <StyledTableCell align="right">
-                      Phone Number
-                    </StyledTableCell>
-                    <StyledTableCell align="right">Address</StyledTableCell>
-                    <StyledTableCell align="right">Role </StyledTableCell>
-                    <StyledTableCell align="right">Action </StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {userList?.map((item: any, index: number) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell component="th" scope="item">
-                        {item.first_name} {item.last_name}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {item.email}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {item.phone_number}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {item.address}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {item.role === "user" ? "User" : "Admin"}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {item.role == "user" ? (
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Button
-                                className="bti"
-                                onClick={() => handleEdit(item.id)}
-                              >
-                                <i className="fa-solid fa-pen-to-square"></i>
-                              </Button>
-                            </div>
-                            <div className="col-md-6">
-                              <Button
-                                className="bti"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <i className="fa-solid fa-trash-can"></i>
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="bti">
-                            <i className="fa-solid fa-file-shield"></i>
-                          </div>
-                        )}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <div className="row m-4 rht">
-              <Stack spacing={2}>
-                <Pagination
-                  count={totalPage}
-                  variant="outlined"
-                  shape="rounded"
-                  page={currentPage}
-                  onChange={handlePageChange}
-                />
-              </Stack>
-            </div>
+
+            {userList.length > 0 ? (
+              <>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell>Name</StyledTableCell>
+                        <StyledTableCell align="right">Email</StyledTableCell>
+                        <StyledTableCell align="right">
+                          Phone Number
+                        </StyledTableCell>
+                        <StyledTableCell align="right">Address</StyledTableCell>
+                        <StyledTableCell align="right">Role </StyledTableCell>
+                        <StyledTableCell align="right">Action </StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {userList?.map((item: any, index: number) => (
+                        <StyledTableRow key={index}>
+                          <StyledTableCell component="th" scope="item">
+                            {item.first_name} {item.last_name}
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {item.email}
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {item.phone_number}
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {item.address}
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {item.role === "user" ? "User" : "Admin"}
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {item.role == "user" ? (
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Button
+                                    className="bti"
+                                    onClick={() => handleEdit(item.id)}
+                                  >
+                                    <i className="fa-solid fa-pen-to-square"></i>
+                                  </Button>
+                                </div>
+                                <div className="col-md-6">
+                                  <Button
+                                    className="bti"
+                                    onClick={() => handleDelete(item.id)}
+                                  >
+                                    <i className="fa-solid fa-trash-can"></i>
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="bti">
+                                <i className="fa-solid fa-file-shield"></i>
+                              </div>
+                            )}
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <div className="row m-4 rht">
+                  <Stack spacing={2}>
+                    <Pagination
+                      count={totalPage}
+                      variant="outlined"
+                      shape="rounded"
+                      page={currentPage}
+                      onChange={handlePageChange}
+                    />
+                  </Stack>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="make-center emptyList">
+                  <i className="fa-solid fa-box-archive"></i>
+                  <p>No Entry found </p>
+                </div>
+              </>
+            )}
           </div>
           <React.Fragment>
             <BootstrapDialog

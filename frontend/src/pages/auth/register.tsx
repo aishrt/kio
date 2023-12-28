@@ -38,7 +38,6 @@ export const Register = () => {
   } = useForm<FormData>();
 
   const [file, setFile] = useState<any>();
-  const [fileupload, setFileupload] = useState<any>();
 
   const handleFileChange = (file: File | null, fileDataURL: string) => {
     setFile(file);
@@ -55,7 +54,6 @@ export const Register = () => {
 
       if (response.status === 200) {
         const data = response.data.file;
-        setFileupload(data);
         return data;
       } else {
         console.error("Error uploading image:", response.data);
